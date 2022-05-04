@@ -1,17 +1,19 @@
 {
     "name": "codebitz/yomail",
-    "description": "Easily debug emails locally",
+    "description": "Easily debug emails locally on Laravel",
     "keywords": [
         "codebitz",
-        "yomail"
+        "yomail",
+        "email",
+        "local"
     ],
-    "homepage": "https://github.com/codebitz/yomail",
+    "homepage": "https://github.com/codebitz-dev/yomail",
     "license": "MIT",
     "type": "library",
     "authors": [
         {
             "name": "Aaron Lumsden",
-            "email": "aaronlumsden@me.com",
+            "email": "aaron@codebitz.dev",
             "role": "Developer"
         }
     ],
@@ -36,7 +38,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
     },
     "config": {
         "sort-packages": true
