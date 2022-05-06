@@ -33,8 +33,11 @@ Once you have run the installation you can visit your project domain followed by
 
 Here are the optional settings for YoMail which you can add to the `.env` file. Below is the settings and their defaults.
 
-```
-YOMAIL_ROUTE=yomail  \\ the default route for the inbox ie example.local/yomail
-YOMAIL_REFRESH=1000  \\ how often the inbox will check for new emails (in milliseconds)
-YOMAIL_ENABLED=true  \\ If YoMail should be enabled or not
+```shell
+# The default route for the inbox ie example.local/yomail
+YOMAIL_ROUTE=yomail
+# How often the inbox will check for new emails (in milliseconds)
+YOMAIL_REFRESH=1000
+# If YoMail should be enabled or not
+YOMAIL_ENABLED=true 
 ```

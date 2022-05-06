@@ -32,7 +32,9 @@ class YoMailInstall extends Command
         $this->installConfig();
         $this->installAssets();
         $this->info('');
-        $this->info('👍 Yomail has been installed. If you like this package please star it on Github https://github.com');
+        $this->info('👍 Yomail has been installed.');
+        $this->info('⭐ If you like this package please star it on Github https://github.com/codebitz-dev/yomail');
+        $this->info('⚡ You can also follow me on Twitter https://twitter.com/aaronlumsden');
         return 0;
     }
 
