@@ -41,3 +41,8 @@ YOMAIL_REFRESH=1000
 # If YoMail should be enabled or not
 YOMAIL_ENABLED=true 
 ```
+
+## Support
+
+⭐ If you like this package then please give it a star
+⚡ You can also follow me on Twitter [@aaronlumsden](https://twitter.com/aaronlumsden)
