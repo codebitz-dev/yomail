@@ -45,4 +45,5 @@ YOMAIL_ENABLED=true
 ## Support
 
 ⭐ If you like this package then please give it a star
+
 ⚡ You can also follow me on Twitter [@aaronlumsden](https://twitter.com/aaronlumsden)
