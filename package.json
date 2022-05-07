@@ -24,6 +24,7 @@
     "dependencies": {
         "dayjs": "^1.11.1",
         "element-ui": "^2.15.8",
-        "vue-codemirror": "^4.0.6"
+        "vue-codemirror": "^4.0.6",
+        "vue-infinite-loading": "^2.4.5"
     }
 }

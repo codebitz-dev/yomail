@@ -57,7 +57,26 @@
             </div>
 
             <div v-if="!activeEmail" class="p-8 text-gray-500 text-center">
-              Sent emails from your application will appear here.
+              <p class="mb-4 text-black font-bold">
+                Sent emails from your application will appear here.
+              </p>
+
+              <button
+                @click="sendTest"
+                :disabled="busy"
+                class="bg-indigo-500 text-white rounded px-4 py-2 mb-8"
+              >
+                {{ busy ? "Sending..." : "Send test email" }}
+              </button>
+
+              <p class="mb-2 text-left text-sm text-gray-400">
+                Whilst testing locally you might want to update this in your
+                .env file.
+              </p>
+
+              <div class="bg-gray-200 py-2 px-4 rounded text-left mb-2">
+                MAIL_MAILER=log
+              </div>
             </div>
 
             <div v-else>
@@ -162,7 +181,7 @@
                   dark:border-gray-700
                   grid grid-cols-6
                 "
-                v-if="activeEmail.cc"
+                v-if="activeEmail.cc.length"
               >
                 <div
                   class="
@@ -195,7 +214,7 @@
               </div>
 
               <div
-                v-if="activeEmail.bcc"
+                v-if="activeEmail.bcc.length"
                 class="
                   px-4
                   py-1
@@ -235,7 +254,7 @@
               </div>
 
               <div
-                v-if="activeEmail.bcc"
+                v-if="activeEmail.attachments.length"
                 class="
                   px-4
                   py-1
@@ -414,6 +433,7 @@
 <script>
 import SideBar from "./sidebar";
 import "codemirror/mode/htmlmixed/htmlmixed.js";
+import axios from "axios";
 export default {
   components: { SideBar },
   data() {
@@ -421,6 +441,7 @@ export default {
       activeEmail: false,
       activeTab: "html",
       darkMode: false,
+      busy: false,
     };
   },
   mounted() {
@@ -429,6 +450,19 @@ export default {
     }
   },
   methods: {
+    sendTest() {
+      this.busy = true;
+      axios
+        .post(window.yomail.route + "/test", function (response) {
+          this.$message("Email sent.");
+        })
+        .catch(() => {
+          this.$message.error("Oops, theres been an error.");
+        })
+        .finally(() => {
+          this.busy = false;
+        });
+    },
     makeActive(email) {
       this.activeEmail = email;
     },

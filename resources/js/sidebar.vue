@@ -1,5 +1,6 @@
 <template>
   <div
+    infinite-wrapper
     class="
       w-72
       fixed
@@ -13,16 +14,17 @@
       m-4
       scrollbar-thin scrollbar-thumb-indigo-900 scrollbar-track-transparent
       z-10
-      p-4
-      py-0
     "
   >
-    <div class="py-4 sticky top-0 z-10 bg-gray-200 dark:bg-gray-700">
+    <div class="sticky top-0 z-10 bg-gray-200 dark:bg-gray-700">
       <div
         class="
+          sticky
+          top-0
+          z-10
           bg-gradient-to-tr
           p-4
-          rounded
+          rounded rounded-b-none
           from-indigo-500
           to-violet-400
           mb-4
@@ -53,27 +55,40 @@
           >
         </p>
       </div>
-      <span
-        class="font-bold float-left mt-2 dark:text-white"
-        v-if="emails.length"
-        >Inbox ({{ emails.length }})</span
-      >
-      <delete-emails
-        class="float-right"
-        :emails="emails"
-        @deleteAllEmails="deleteAllEmails"
-      ></delete-emails>
-      <div class="clear-both"></div>
-    </div>
-    <div>
-      <!--<div class="sticky top-0 z-10 bg-white p-4">YoMail</div>-->
-      <sidebar-item
-        :activeEmail="activeEmail"
-        v-for="(email, index) in emails"
-        :key="index"
-        :email="email"
-        @makeActive="makeActive"
-      ></sidebar-item>
+
+      <div class="p-4 pt-0">
+        <span
+          class="font-bold float-left mt-2 dark:text-white"
+          v-if="emails.length"
+          >Inbox ({{ emailCount }})</span
+        >
+        <delete-emails
+          class="float-right"
+          :emails="emails"
+          @deleteAllEmails="deleteAllEmails"
+        ></delete-emails>
+        <div class="clear-both mb-4"></div>
+
+        <div>
+          <sidebar-item
+            :activeEmail="activeEmail"
+            v-for="(email, index) in emails"
+            :key="index"
+            :email="email"
+            @makeActive="makeActive"
+          ></sidebar-item>
+          <infinite-loading
+            @infinite="getEmails"
+            :distance="100"
+            :forceUseInfiniteWrapper="true"
+          >
+            <div slot="no-more" class="text-gray-400 text-sm">
+              All emails loaded
+            </div>
+            <div slot="no-results"></div>
+          </infinite-loading>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -82,8 +97,9 @@
 import SidebarItem from "./sidebar-item";
 import axios from "axios";
 import DeleteEmails from "./delete-emails";
+import InfiniteLoading from "vue-infinite-loading";
 export default {
-  components: { SidebarItem, DeleteEmails },
+  components: { SidebarItem, DeleteEmails, InfiniteLoading },
   props: {
     activeEmail: {},
   },
@@ -91,6 +107,8 @@ export default {
     return {
       emails: [],
       timestamp: false,
+      page: 1,
+      emailCount: 0,
     };
   },
   created() {
@@ -103,18 +121,32 @@ export default {
     deleteAllEmails() {
       this.emails = [];
       this.timestamp = false;
+      this.emailCount = 0;
       this.$emit("makeActive", false);
     },
-    getEmails() {
-      axios.get(window.yomail.route + "/emails").then((response) => {
-        this.emails = response.data;
+    getEmails($state) {
+      axios
+        .get(window.yomail.route + "/emails?page=" + this.page)
+        .then((response) => {
+          this.emailCount = response.data.total;
+          if (response.data.data.length) {
+            this.emails.push(...response.data.data);
+            this.page += 1;
+            if ($state) {
+              $state.loaded();
+            }
+          } else {
+            if ($state) {
+              $state.complete();
+            }
+          }
 
-        if (this.emails[0]) {
-          this.timestamp = this.emails[0].id;
+          if (this.emails[0]) {
+            this.timestamp = this.emails[0].id;
 
-          this.$emit("makeActive", this.emails[0]);
-        }
-      });
+            this.$emit("makeActive", this.emails[0]);
+          }
+        });
     },
     getLatestEmails() {
       axios
@@ -123,6 +155,7 @@ export default {
         )
         .then((response) => {
           var noActives = false;
+          this.emailCount += response.data.count;
           if (this.emails.length == 0) {
             noActives = true;
           }

@@ -8,6 +8,7 @@ use Codebitz\Yomail\YoMailTransporter;
 use Illuminate\Mail\Events\MessageSending;
 use Codebitz\Yomail\Listeners\YoMailListener;
 use Codebitz\Yomail\Providers\MessageServiceProvider;
+use Config;
 
 class YomailServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,10 @@ class YomailServiceProvider extends ServiceProvider
         /*
          * Optional methods to load your package assets
          */
+
+        if(!Config::get('yomail.enabled')){
+            return;
+        }
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'yomail');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');

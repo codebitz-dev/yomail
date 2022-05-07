@@ -6,6 +6,8 @@
 
         <title>Yo Mail</title>
 
+        <link rel="icon" href="{{ asset('vendor/yomail/yomailfavicon.ico') }}">
+
 
 
         <link href="{{ asset('vendor/yomail/yomail.css') }}" rel="stylesheet" />
